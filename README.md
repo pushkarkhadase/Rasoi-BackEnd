@@ -3,7 +3,7 @@ These are the links for your final year projects materials<br>
 
 !!!The routes in the blue color are successfully designed and the routes starting with the '?' are yet to be designed.<br>
 
-### Undesigned routes can be temporary or may need to change according to frontend requirement. 
+### Undesigned routes can be temporary or may need to change according to frontend requirement
 
 ## DataBase :-<br>
 [DataBase Schema:](https://docs.google.com/document/d/1EB5t6nidZ-uaLrclqBgNuNUXR_0b8_8Xe3f0YOEcS1Y/edit) ->  (Structure) <br>
