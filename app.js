@@ -3,9 +3,10 @@ const bodyParser = require('body-parser');
 const mongoConnect = require("./util/database").mongoConnect;
 
 const consumerRoutes = require('./routes/consumer');
+const cors=require("cors")
 
 const app = express();
-
+app.use(cors());
 app.use(bodyParser.json()); //application/json
 
 // Solving the CORS errors
