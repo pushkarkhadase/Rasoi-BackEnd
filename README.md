@@ -36,7 +36,7 @@ These are the links for your final year projects materials<br>
 ## Customer:-<br>
 [Customer SignUP:](https://app.diagrams.net/#G16Hx_NXQksMLIQfrxOyMCmaRZofIKp3Jm) -> (POST) <br>
 -> Route for Signup Functionality of Customer which will give us the post request with user data and we will store it into the database<br>
-**-> API End Point -> /customer/signUp**
+**-> API End Point -> /customer/signup**
 <br>
 
 [Customer LogIn:](https://app.diagrams.net/#G1uO4AbjRaOSnWanhBWAVsVe3qnsPr-Xav)  -> (POST) <br>
