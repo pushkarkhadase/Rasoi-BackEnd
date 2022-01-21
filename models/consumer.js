@@ -13,7 +13,6 @@ class Consumer {
   // this is the function for saving the user into the database,
   //so far edit functionality is not there so only adding new users in to database.
   save() {
-    console.log("Adding the user into the database");
     const db = getDb();
     return db.collection("consumer").insertOne(this);
   }
