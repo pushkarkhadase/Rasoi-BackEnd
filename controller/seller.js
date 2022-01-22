@@ -13,7 +13,8 @@ exports.signup = (req, res, next) => {
     const password = req.body.password;
     const panImage = req.files[0].path;
     const personalImage = req.files[1].path;
-    Seller.findByMobileNo(mobileNo)
+    if ((sellerName != null) && (mobileNo != null)) {
+      Seller.findByMobileNo(mobileNo)
       .then((foundedSeller) => {
         if (foundedSeller) {
             //here we are not uploading any thing into the db till now but we have already got the images 
@@ -21,8 +22,8 @@ exports.signup = (req, res, next) => {
             //edit image functionalities as it will also need delete operation.
             //logic goes here ...
           res.status(403).json({
-            message: "Seller Already exist on that Phone No",
-            mobileNo: mobileNo,
+            "message": "Seller Already exist on that Phone No",
+            "mobileNo": mobileNo,
           });
         } else {
           bcrypt
@@ -40,8 +41,8 @@ exports.signup = (req, res, next) => {
             .then((result) => {
                 //Logic to save the seller _id into the validator document goes here ...
               res.status(201).json({
-                message: "Seller Created!!!",
-                data: { sellerName, mobileNo },
+                "message" : "Seller Created!!!",
+                "data" : { sellerName, mobileNo },
               });
             })
             .catch((err) => {
@@ -50,9 +51,15 @@ exports.signup = (req, res, next) => {
         }
       })
       .catch();
+    } else {
+      res.status(422).json({
+        "message" : "Please provide the name and mobile number"
+      })
+    }
+    
   } else {
     res.status(422).json({
-      message: "Images are in unsupported format",
+      "message" : "Images are in unsupported format",
     });
   }
 };
