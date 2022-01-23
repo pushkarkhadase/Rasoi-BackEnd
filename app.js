@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const cors = require("cors");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -29,7 +30,8 @@ const mongoConnect = require("./util/database").mongoConnect;
 
 const consumerRoutes = require("./routes/consumer");
 const sellerRoutes = require("./routes/seller");
-const cors = require("cors");
+const validatorRoutes = require("./routes/validator")
+
 
 const app = express();
 app.use(cors());
@@ -52,6 +54,7 @@ app.use((req, res, next) => {
 
 app.use("/consumer", consumerRoutes);
 app.use("/seller", sellerRoutes);
+app.use("/validator", validatorRoutes);
 
 mongoConnect(() => {
   app.listen(process.env.PORT || 8080);
