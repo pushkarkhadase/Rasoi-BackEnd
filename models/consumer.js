@@ -31,7 +31,6 @@ class Consumer {
       .collection("consumer")
       .findOne({ mobileNo : searchingMobileNo })
       .then((consumer) => {
-        console.log(consumer);
         return consumer;
       })
       .catch((err) => {

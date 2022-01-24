@@ -32,7 +32,6 @@ class Seller {
     //this function is saving the seller into the database
     //so far the edit functionality is not covered
     save(){
-        console.log("adding the seller into the database");
         const db = getDb();
         return db.collection("seller").insertOne(this);
     }
@@ -44,7 +43,6 @@ class Seller {
           .collection("seller")
           .findOne({ mobileNo : searchingMobileNo })
           .then((seller) => {
-            console.log(seller);
             return seller;
           })
           .catch((err) => {
