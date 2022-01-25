@@ -120,18 +120,19 @@ exports.signin = (req, res, next) => {
             bcrypt.compare(password, seller.password).then((doMatch) => {
               if (doMatch) {
                 res.status(200).json({
-                  "message": "user authenticated",
-                  "seller ID": seller._id,
+                  message : "user authenticated",
+                  seller_ID: seller._id,
+                  configured : seller.isConfigured
                 });
               } else {
                 res.status(403).json({
-                  "message": "user password didnt match",
+                  message: "user password didnt match",
                 });
               }
             });
           } else {
             res.status(403).json({
-              "message" : "Seller is not validated"
+              message : "Seller is not validated"
             })
           }
           

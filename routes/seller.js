@@ -9,6 +9,7 @@ const sellerController = require('../controller/seller');
 
 //  POST /seller/signup
 router.post('/signup', sellerController.signup);
+//  POST /seller/signin
 router.post('/signin', sellerController.signin);
 
 //exporting the router
