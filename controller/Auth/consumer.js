@@ -1,5 +1,5 @@
 //importing the consumer class model
-const Consumer = require("../models/consumer");
+const Consumer = require("../../models/consumer");
 //using the bcrypt for encrypting the password of the consumer
 const bcrypt = require("bcryptjs");
 

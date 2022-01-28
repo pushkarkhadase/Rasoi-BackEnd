@@ -4,51 +4,131 @@ const getDb = require("../util/database").getDb;
 
 //creating the class as abstract data type for storing the information of seller into the database
 class Seller {
-    constructor(sellerName, mobileNo, password, panImage, personalImage){
-        this.sellerName = sellerName;
-        this.mobileNo = mobileNo;
-        this.password = password;
-        //image link will be stored
-        this.panImage = panImage;
-        //image link will be stored
-        this.personalImage = personalImage;
-        //all the below fields are kept empty as all will be set as per need
-        this.email = null;
-        this.casualImage = null;
-        this.areaName = null;
-        this.pinCode = null;
-        this.bio = null;
-        this.socialMedia = {};
-        this.dishIds = [];
-        this.specialDishesName = [];
-        this.orderIds = [];
-        this.avgRating = 3;
-        //since new seller is yet to be valified we have kept it as false
-        this.isValidated = false;
-        //since new seller have not added any of his menu we have kept it as false
-        this.isConfigured = false;
-    }
+  constructor(sellerName, mobileNo, password, panImage, personalImage) {
+    this.sellerName = sellerName;
+    this.mobileNo = mobileNo;
+    this.password = password;
+    //image link will be stored
+    this.panImage = panImage;
+    //image link will be stored
+    this.personalImage = personalImage;
+    //all the below fields are kept empty as all will be set as per need
+    this.casualImage = null;
+    this.areaName = null;
+    this.pinCode = null;
+    this.bio = null;
+    this.socialMedia = {};
+    this.dishIds = [];
+    this.specialDishesIds = [];
+    this.orderIds = [];
+    this.avgRating = 3;
+    //since new seller is yet to be valified we have kept it as false
+    this.isValidated = false;
+    //since new seller have not added any of his menu we have kept it as false
+    this.isConfigured = false;
+  }
 
-    //this function is saving the seller into the database
-    //so far the edit functionality is not covered
-    save(){
-        const db = getDb();
-        return db.collection("seller").insertOne(this);
-    }
+  //this function is saving the seller into the database
+  //so far the edit functionality is not covered
+  save() {
+    const db = getDb();
+    return db.collection("seller").insertOne(this);
+  }
 
-    //static function to find the seller using his mobile number
-    static findByMobileNo(searchingMobileNo) {
-        const db = getDb();
-        return db
-          .collection("seller")
-          .findOne({ mobileNo : searchingMobileNo })
-          .then((seller) => {
-            return seller;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+  //static function to find the seller using his mobile number
+  static findByMobileNo(searchingMobileNo) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .findOne({ mobileNo: searchingMobileNo })
+      .then((seller) => {
+        return seller;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  static findByID(sellerID) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .findOne({ _id: new mongodb.ObjectId(sellerID) })
+      .then((seller) => {
+        return seller;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  static addTheDishIntoSeller(isSpecial, seller, dishID) {
+    const db = getDb();
+    const dishes =
+      isSpecial == "true" ? seller.specialDishesIds : seller.dishIds;
+    dishes.push(new mongodb.ObjectId(dishID));
+    if (isSpecial == "true" || isSpecial == true) {
+      return db
+        .collection("seller")
+        .updateOne(
+          { _id: new mongodb.ObjectId(seller._id) },
+          { $set: { specialDishesIds: dishes } }
+        )
+        .then((res) => {})
+        .catch((err) => console.log(err));
+    } else {
+      return db
+        .collection("seller")
+        .updateOne(
+          { _id: new mongodb.ObjectId(seller._id) },
+          { $set: { dishIds: dishes } }
+        )
+        .then((res) => {})
+        .catch((err) => console.log(err));
+    }
+  }
+
+  static configureSeller(sellerID) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .updateOne(
+        { _id: new mongodb.ObjectId(sellerID) },
+        { $set: { isConfigured: true } }
+      );
+  }
+
+  static saveSellerPendingInfo(
+    sellerID,
+    casualImageURL,
+    areaName,
+    pinCode,
+    bio,
+    facebookURL,
+    instagramURL,
+    config
+  ) {
+    const socialMedia = {
+      facebookURL: facebookURL,
+      instagramURL: instagramURL,
+    };
+    const db = getDb();
+    return db
+      .collection("seller")
+      .updateOne(
+        { _id: new mongodb.ObjectId(sellerID) },
+        {
+          $set: {
+            casualImage: casualImageURL,
+            areaName: areaName,
+            pinCode: pinCode,
+            bio: bio,
+            socialMedia: socialMedia,
+            isConfigured: config
+          },
+        }
+      );
+  }
 }
 
 //exportting the seller

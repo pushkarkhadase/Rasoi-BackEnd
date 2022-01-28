@@ -1,9 +1,9 @@
 //Importing the seller class model
-const Seller = require("../models/seller");
+const Seller = require("../../models/seller");
 //Importing the validator class model
-const Validator = require("../models/validator");
+const Validator = require("../../models/validator");
 //Importing the filehelper function in order to delete the files form the server
-const fileHelper = require("../util/file");
+const fileHelper = require("../../util/file");
 
 //for encrypting the password
 const bcrypt = require("bcryptjs");
@@ -85,8 +85,7 @@ exports.signup = (req, res, next) => {
               .then((result) => {
                 //sending the response to the frontend for successfull creation 
                 res.status(201).json({
-                  message: "Seller Created!!!",
-                  data: { sellerName, mobileNo },
+                  message: "Seller Created!!!"
                 });
               })
               .catch((err) => {
@@ -97,7 +96,7 @@ exports.signup = (req, res, next) => {
         .catch();
     } else {
       //if the name or the mobile number is missing the repoting it to the front end and aborting the process
-      res.status(422).json({
+      res.status(406).json({
         message: "Please provide the name and mobile number",
       });
     }
@@ -125,7 +124,7 @@ exports.signin = (req, res, next) => {
                   configured : seller.isConfigured
                 });
               } else {
-                res.status(403).json({
+                res.status(401).json({
                   message: "user password didnt match",
                 });
               }
@@ -146,7 +145,7 @@ exports.signin = (req, res, next) => {
         console.log(err);
       });
   } else {
-    res.status(403).json({
+    res.status(422).json({
       message: "either mobile number or password or both are empty",
     });
   }

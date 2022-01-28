@@ -44,12 +44,15 @@ const fileFilter = (req, file, cb) => {
 const mongoConnect = require("./util/database").mongoConnect;
 
 
-//importing the consumer routes to use all consumer related routes
-const consumerRoutes = require("./routes/consumer");
-//importing the seller routes to use all the seller related routes
-const sellerRoutes = require("./routes/seller");
-//importing the validator routes to use the validator related routes
-const validatorRoutes = require("./routes/validator");
+//importing the consumer Authentication routes to use all consumer related routes
+const consumerRoutes = require("./routes/Auth/consumer");
+//importing the seller Authentication routes to use all the seller related routes
+const sellerAuthRoutes = require("./routes/Auth/seller");
+//importing the validator Authentication routes to use the validator related routes
+const validatorRoutes = require("./routes/Auth/validator");
+
+//importing the seller Regualar routes to use all the seller related routes
+const sellerRegularRoutes = require("./routes/regular/seller");
 
 
 //intializing the express into the app
@@ -85,10 +88,14 @@ app.use((req, res, next) => {
 
 //using the consumer routes
 app.use("/consumer", consumerRoutes);
-//using the seller routes
-app.use("/seller", sellerRoutes);
+//using the seller authorization routes
+app.use("/seller", sellerAuthRoutes);
 //using the validator routes
 app.use("/validator", validatorRoutes);
+
+//using the seller Regular routes
+app.use("/seller", sellerRegularRoutes);
+
 
 //connnecting the mongodb 
 mongoConnect(() => {

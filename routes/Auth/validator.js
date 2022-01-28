@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 //importing the validator controller
-const validatorController = require('../controller/validator');
+const validatorController = require('../../controller/Auth/validator');
 
 //  POST /validator/signup
 router.post('/signup', validatorController.signup);
