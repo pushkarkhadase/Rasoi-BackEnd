@@ -7,7 +7,7 @@ const SellerDishes = require("../../models/sellerDishes");
 const fileHelper = require("../../util/file");
 
 exports.getSellerConfig = (req, res, next) => {
-  const sellerID = req.body.sellerID;
+  const sellerID = req.query.sellerID;
   Seller.findByID(sellerID)
     .then((seller) => {
       if (seller) {
