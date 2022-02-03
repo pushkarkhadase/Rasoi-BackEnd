@@ -113,21 +113,47 @@ class Seller {
       instagramURL: instagramURL,
     };
     const db = getDb();
+    return db.collection("seller").updateOne(
+      { _id: new mongodb.ObjectId(sellerID) },
+      {
+        $set: {
+          casualImage: casualImageURL,
+          areaName: areaName,
+          pinCode: pinCode,
+          bio: bio,
+          socialMedia: socialMedia,
+          isConfigured: config,
+        },
+      }
+    );
+  }
+  //static function for finding all the sellers with ids
+  static findMuliSellerByIds(sellerIDs) {
+    const db = getDb();
+
+    return db
+      .collection("seller")
+      .find({ _id: { $in: [...sellerIDs] } })
+      .toArray();
+  }
+
+  //static method for validating the seller
+  static validateSeller(sellerID) {
+    const db = getDb();
     return db
       .collection("seller")
       .updateOne(
         { _id: new mongodb.ObjectId(sellerID) },
-        {
-          $set: {
-            casualImage: casualImageURL,
-            areaName: areaName,
-            pinCode: pinCode,
-            bio: bio,
-            socialMedia: socialMedia,
-            isConfigured: config
-          },
-        }
+        { $set: { isValidated: true } }
       );
+  }
+
+  //static method for deleting the rejected seller
+  static deleteRejectedSeller(sellerID) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .deleteOne({ _id: new mongodb.ObjectId(sellerID) });
   }
 }
 

@@ -25,45 +25,37 @@ exports.signup = (req, res, next) => {
     });
 };
 
-// exports.signin = (req, res, next) => {
-//   const mobileNo = req.body.username;
-//   const password = req.body.password;
-//   if (mobileNo && password) {
-//     Seller.findByMobileNo(mobileNo)
-//       .then((seller) => {
-//         if (seller) {
-//           if(seller.isValidated){
-//             bcrypt.compare(password, seller.password).then((doMatch) => {
-//               if (doMatch) {
-//                 res.status(200).json({
-//                   message : "user authenticated",
-//                   seller_ID: seller._id,
-//                   configured : seller.isConfigured
-//                 });
-//               } else {
-//                 res.status(401).json({
-//                   message: "user password didnt match",
-//                 });
-//               }
-//             });
-//           } else {
-//             res.status(403).json({
-//               message : "Seller is not validated"
-//             })
-//           }
-          
-//         } else {
-//           res.status(404).json({
-//             message: "user not found",
-//           });
-//         }
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   } else {
-//     res.status(422).json({
-//       message: "either mobile number or password or both are empty",
-//     });
-//   }
-// };
+exports.signin = (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  if (username && password) {
+    Validator.findByUsername(username)
+      .then((validator) => {
+        if (validator) {
+          bcrypt.compare(password, validator.password).then((doMatch) => {
+            if (doMatch) {
+              res.status(200).json({
+                message: "Validator authenticated",
+                validatorID: validator._id,
+              });
+            } else {
+              res.status(401).json({
+                message: "Validator password didnt match",
+              });
+            }
+          });
+        } else {
+          res.status(404).json({
+            message: "Validator not found",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    res.status(422).json({
+      message: "either mobile number or password or both are empty",
+    });
+  }
+};

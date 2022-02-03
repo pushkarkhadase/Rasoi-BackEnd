@@ -18,13 +18,16 @@ class Validator {
   }
 
   //static function to add the newly created seller into the validator's queue for validating him
-  static addSellerToValidationQueue(validator , SellerId){
+  static addSellerToValidationQueue(validator, SellerId) {
     const db = getDb();
     const oldSellerIDs = validator.sellerIds;
     oldSellerIDs.push(SellerId);
-    console.log("in DB " + oldSellerIDs);
-    
-    return db.collection("validator").updateOne({_id : new mongodb.ObjectId(validator._id)}, {$set : {sellerIds : oldSellerIDs}});
+
+    return db.collection("validator").updateOne(
+      { _id: new mongodb.ObjectId(validator._id) },
+      { $set: { sellerIds: oldSellerIDs } }
+      // { $set: { sellerIds: [] } }
+    );
   }
 
   //static function for finding the validator by the username
@@ -33,14 +36,30 @@ class Validator {
     return db
       .collection("validator")
       .findOne({ username: username })
-      .then(vali => {
-        console.log("validator found");
-        console.log(vali);
+      .then((vali) => {
         return vali;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
+  }
+
+  //static method for deleting the varified or rejected user id from the sellerIDs of validator
+  static deleteSellerID(validatorSellerIDs, sellerID) {
+    const tempArr = [];
+    validatorSellerIDs.forEach(sellerid => {
+      tempArr.push(sellerid.toString());
+    });
+    const sellerIndex = tempArr.indexOf(sellerID);
+    console.log(sellerIndex);
+    validatorSellerIDs.splice(sellerIndex, 1);
+    const db = getDb();
+    return db
+      .collection("validator")
+      .updateOne(
+        { _id: new mongodb.ObjectId("61ece3aa24f20544afb6c4ea") },
+        { $set: { sellerIds: validatorSellerIDs } }
+      );
   }
 }
 
