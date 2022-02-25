@@ -45,7 +45,7 @@ const mongoConnect = require("./util/database").mongoConnect;
 
 
 //importing the consumer Authentication routes to use all consumer related routes
-const consumerRoutes = require("./routes/Auth/consumer");
+const consumerAuthRoutes = require("./routes/Auth/consumer");
 //importing the seller Authentication routes to use all the seller related routes
 const sellerAuthRoutes = require("./routes/Auth/seller");
 //importing the validator Authentication routes to use the validator related routes
@@ -89,9 +89,11 @@ app.use((req, res, next) => {
 
 
 //using the consumer routes
-app.use("/consumer", consumerRoutes);
+app.use("/consumer", consumerAuthRoutes);
+
 //using the seller authorization routes
 app.use("/seller", sellerAuthRoutes);
+
 //using the validator routes
 app.use("/validator", validatorRoutes);
 

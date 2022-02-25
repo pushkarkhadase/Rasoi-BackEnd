@@ -39,8 +39,8 @@ exports.signup = (req, res, next) => {
           .then((result) => {
             //sending the message to the frontend that the user have been created
             res.status(201).json({
-              "message" : "User Created!!!",
-              "data" : { name, mobileNo, address },
+              message: "User Created!!!",
+              data: { name, mobileNo, address },
             });
           })
           .catch((err) => {
@@ -48,9 +48,40 @@ exports.signup = (req, res, next) => {
           });
       }
     });
-  } else{
+  } else {
     res.status(403).json({
-      "message" : "one of the field was empty and the request was denied"
-    })
+      message: "one of the field was empty and the request was denied",
+    });
   }
+};
+
+//logic for consumer authentication under development!
+exports.consumerLogin = (req, res, next) => {
+  const mobileNo = req.body.mobileNo;
+  const password = req.body.password;
+  Consumer
+    .findByMobileNo(mobileNo)
+    .then((consumer) => {
+      if (!consumer) {
+        return res.status(403).json({
+          message: "Consumer Not Found",
+        });
+      }
+      bcrypt
+        .compare(password, consumer.password)
+        .then((doMatch) => {
+          if (doMatch) {
+            return res.status(200).json({
+              message: "Consumer Authenticated",
+            });
+          }
+          return res.status(401).json({
+            message: "Password not matched!",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => console.log(err));
 };

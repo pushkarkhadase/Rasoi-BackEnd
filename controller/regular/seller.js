@@ -77,6 +77,8 @@ exports.addDishesMenu = (req, res, next) => {
 
               if (specialDishesCounts < 3) {
                 console.log("in the third if");
+                //check if the dish is already exist
+                
 
                 //add the nomal dishes
 
@@ -248,3 +250,30 @@ exports.fillSellerDetails = (req, res, next) => {
     });
   }
 };
+//under maintanance
+
+exports.getSellerDashbord = (req, res, next) => {
+  const sellerID = req.body.sellerID;
+  if(sellerID){
+    Seller.findByID(sellerID).then(seller=>{
+      if(seller){
+
+      }else{
+        res.status(406)
+      }
+    })
+  }else{
+    res.status(403).json({
+      message: "seller id field is blank"
+    })
+  }
+
+};
+
+
+
+
+
+
+
+

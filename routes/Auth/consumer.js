@@ -10,5 +10,8 @@ const consumerController = require('../../controller/Auth/consumer');
 //  POST /consumer/signup
 router.post('/signup', consumerController.signup);
 
+//  POST /consumer/login
+router.post('/login', consumerController.consumerLogin);
+
 //exporting the router
 module.exports = router;

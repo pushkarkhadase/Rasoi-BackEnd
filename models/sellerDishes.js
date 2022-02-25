@@ -19,6 +19,18 @@ class SellerDishes {
       .collection("sellerDishes")
       .insertOne(this);
   }
+
+  //under developement 
+  //static function to check if the dish is existing already
+
+  static findDishByName(isSpecial, dishName){
+    const db = getDb();
+    if(isSpecial){
+      db.collection('sellerDishes').findOne({})
+    }
+  }
+
+
 }
 
 module.exports = SellerDishes;
