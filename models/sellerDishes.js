@@ -15,21 +15,28 @@ class SellerDishes {
 
   save() {
     const db = getDb();
-    return db
-      .collection("sellerDishes")
-      .insertOne(this);
+    return db.collection("sellerDishes").insertOne(this);
   }
 
-  //under developement 
+  //under developement
   //static function to check if the dish is existing already
 
-  static findDishByName(isSpecial, dishName){
+  static findDishByName(isSpecial, dishName) {
     const db = getDb();
-    if(isSpecial){
-      db.collection('sellerDishes').findOne({})
+    if (isSpecial) {
+      db.collection("sellerDishes").findOne({});
     }
   }
 
+  static findMultiSellerDishes(dishIDs) {
+    const db = getDb();
+    console.log("printing the dish ids");
+    console.log(dishIDs);
+    return db
+      .collection("sellerDishes")
+      .find({ _id: { $in: [...dishIDs] }})
+      .toArray();
+  }
 
 }
 

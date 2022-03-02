@@ -78,7 +78,6 @@ exports.addDishesMenu = (req, res, next) => {
               if (specialDishesCounts < 3) {
                 console.log("in the third if");
                 //check if the dish is already exist
-                
 
                 //add the nomal dishes
 
@@ -225,8 +224,8 @@ exports.fillSellerDetails = (req, res, next) => {
               .then((result) => {
                 //send the message that the seller have been updated successfully
                 res.status(200).json({
-                  message : "information updated!"
-                })
+                  message: "information updated!",
+                });
               })
               .catch((err) => console.log(err));
           } else {
@@ -250,30 +249,57 @@ exports.fillSellerDetails = (req, res, next) => {
     });
   }
 };
+
 //under maintanance
-
 exports.getSellerDashbord = (req, res, next) => {
-  const sellerID = req.body.sellerID;
-  if(sellerID){
-    Seller.findByID(sellerID).then(seller=>{
-      if(seller){
+  const sellerID = req.query.sellerID;
+  let specicalDishBuffer = [];
+  let generalDishBuffer = [];
+  Seller.findByID(sellerID)
+    .then((seller) => {
+      if (seller) {
+        SellerDishes.findMultiSellerDishes(seller.specialDishesIds)
+          .then((dishes) => {
+            dishes.forEach((dish) => {
+              specicalDishBuffer.push(dish);
+            });
+            return SellerDishes.findMultiSellerDishes(seller.dishIds);
+          })
+          .then((result) => {
+            console.log("printing the normal dishes");
+            console.log(result);
+            result.forEach(dish => {
+              generalDishBuffer.push(dish);              
+            });
+          })
+          .then((result) => {
+            // console.log(specicalDishBuffer);
+            return res.status(200).json({
+              data: {
+                img: seller.casualImageURL,
+                name: seller.sellerName,
+                areaName: seller.areaName,
+                pinCode: seller.pinCode,
+                mobileNo: seller.mobileNo,
+                email: seller.email,
+                facebook: seller.socialMedia.facebookURL,
+                instagram: seller.socialMedia.instagramURL,
+                bio: seller.bio,
+                specialDishes: specicalDishBuffer,
+                generalDishes: generalDishBuffer,
+              },
+            });
+          })
+          .catch((err) => console.log(err));
 
-      }else{
-        res.status(406)
+        // SellerDishes.findMultiSellerDishes(false, seller.dishID).then(dishes => {
+        //   specialDishes = dishes;
+        // }).catch(err => console.log(err));
+      } else {
+        return res.status(403).json({
+          message: "Seller not Found!",
+        });
       }
     })
-  }else{
-    res.status(403).json({
-      message: "seller id field is blank"
-    })
-  }
-
+    .catch((err) => console.log(err));
 };
-
-
-
-
-
-
-
-
