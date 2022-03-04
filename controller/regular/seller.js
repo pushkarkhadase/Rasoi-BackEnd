@@ -276,7 +276,7 @@ exports.getSellerDashbord = (req, res, next) => {
             // console.log(specicalDishBuffer);
             return res.status(200).json({
               data: {
-                img: seller.casualImageURL,
+                img: seller.casualImage,
                 name: seller.sellerName,
                 areaName: seller.areaName,
                 pinCode: seller.pinCode,
