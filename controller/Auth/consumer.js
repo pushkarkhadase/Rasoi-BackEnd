@@ -73,6 +73,7 @@ exports.consumerLogin = (req, res, next) => {
           if (doMatch) {
             return res.status(200).json({
               message: "Consumer Authenticated",
+              consumerID: consumer._id
             });
           }
           return res.status(401).json({

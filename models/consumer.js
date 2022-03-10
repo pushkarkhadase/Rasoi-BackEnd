@@ -1,8 +1,7 @@
-//importing the mongodb 
+//importing the mongodb
 const mongodb = require("mongodb");
 //importing the database handler function
 const getDb = require("../util/database").getDb;
-
 
 //creating the class as abstract structure to store the data for the consumers
 class Consumer {
@@ -29,13 +28,25 @@ class Consumer {
     const db = getDb();
     return db
       .collection("consumer")
-      .findOne({ mobileNo : searchingMobileNo })
+      .findOne({ mobileNo: searchingMobileNo })
       .then((consumer) => {
         return consumer;
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  //static function to find the consumer with the _id
+  static findById(consumerID) {
+    const db = getDb();
+    return db
+      .collection("consumer")
+      .findOne({ _id: new mongodb.ObjectId(consumerID) })
+      .then((result) => {
+        return result;
+      })
+      .catch((err) => console.log(err));
   }
 }
 

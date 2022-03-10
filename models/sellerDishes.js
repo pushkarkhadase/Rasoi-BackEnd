@@ -30,8 +30,6 @@ class SellerDishes {
 
   static findMultiSellerDishes(dishIDs) {
     const db = getDb();
-    console.log("printing the dish ids");
-    console.log(dishIDs);
     return db
       .collection("sellerDishes")
       .find({ _id: { $in: [...dishIDs] }})

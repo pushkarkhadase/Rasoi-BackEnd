@@ -155,6 +155,12 @@ class Seller {
       .collection("seller")
       .deleteOne({ _id: new mongodb.ObjectId(sellerID) });
   }
+
+  //static method for returning all the sellers into the database
+  static getAllSellers(){
+    const db = getDb();
+    return db.collection("seller").find({}).toArray();
+  }
 }
 
 //exportting the seller

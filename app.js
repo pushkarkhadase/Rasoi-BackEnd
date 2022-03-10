@@ -51,6 +51,8 @@ const sellerAuthRoutes = require("./routes/Auth/seller");
 //importing the validator Authentication routes to use the validator related routes
 const validatorRoutes = require("./routes/Auth/validator");
 
+//importing the consumer Regular routes to use all the consumer related routes
+const consumerRegularRoutes = require("./routes/regular/consumer");
 //importing the seller Regualar routes to use all the seller related routes
 const sellerRegularRoutes = require("./routes/regular/seller");
 //importing the Validator Regualar routes to use all the validator related routes
@@ -99,8 +101,12 @@ app.use("/validator", validatorRoutes);
 
 //using the seller Regular routes
 app.use("/seller", sellerRegularRoutes);
-//using the validator Regular routed
+
+//using the validator Regular routes
 app.use("/validator", validatorRegularRoutes);
+
+//using the consumer Regualr routes
+app.use("/consumer", consumerRegularRoutes);
 
 //connnecting the mongodb 
 mongoConnect(() => {
