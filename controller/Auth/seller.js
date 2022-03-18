@@ -4,6 +4,8 @@ const Seller = require("../../models/seller");
 const Validator = require("../../models/validator");
 //Importing the filehelper function in order to delete the files form the server
 const fileHelper = require("../../util/file");
+//importing the string Formating function
+const stringFormater = require("../../util/stringFormater");
 
 //for encrypting the password
 const bcrypt = require("bcryptjs");
@@ -14,7 +16,8 @@ exports.signup = (req, res, next) => {
   //checking if the image files are valid and error proof so it will not crash the server
   if (req.files) {
     //getting all the data from the request body
-    const sellerName = req.body.sellerName;
+    const sellerNameTemp = req.body.sellerName;
+    const sellerName = stringFormater.stringFormating(sellerNameTemp);
     const mobileNo = req.body.mobileNo;
     const password = req.body.password;
     //getting the image file name and path so that it can be saved into the database

@@ -6,6 +6,9 @@ const SellerDishes = require("../../models/sellerDishes");
 //Importing the filehelper function in order to delete the files form the server
 const fileHelper = require("../../util/file");
 
+//Importing the String Formating function 
+const stringFormater = require('../../util/stringFormater');
+
 exports.getSellerConfig = (req, res, next) => {
   const sellerID = req.query.sellerID;
   Seller.findByID(sellerID)
@@ -40,7 +43,8 @@ exports.getSellerConfig = (req, res, next) => {
 exports.addDishesMenu = (req, res, next) => {
   if (req.files) {
     const sellerID = req.body.sellerID;
-    const dishName = req.body.dishName;
+    const dishNameTemp = req.body.dishName;
+    const dishName = stringFormater.stringFormating(dishNameTemp);
     const dishType = req.body.dishType;
     const price = req.body.price;
     const timeReq = req.body.timeReq;
