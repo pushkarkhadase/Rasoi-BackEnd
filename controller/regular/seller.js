@@ -78,15 +78,17 @@ exports.addDishesMenu = (req, res, next) => {
               if (specialDishesCounts < 3) {
                 console.log("in the third if");
                 //check if the dish is already exist
-
                 //add the nomal dishes
+
+                const updatedSpecialDishesNames = seller.specialDishesNames;
+                updatedSpecialDishesNames.push(dishName);
 
                 return sellerDish
                   .save()
                   .then((result) => {
                     console.log(result);
                     dishID = result.insertedId;
-                    Seller.addTheDishIntoSeller(isSpecial, seller, dishID);
+                    Seller.addTheDishIntoSeller(isSpecial, seller, dishID, updatedSpecialDishesNames);
                   })
                   .then((result) => {
                     //check if the seller is not configured before and seller
@@ -117,7 +119,7 @@ exports.addDishesMenu = (req, res, next) => {
                   .then((result) => {
                     console.log(result);
                     dishID = result.insertedId;
-                    Seller.addTheDishIntoSeller(isSpecial, seller, dishID);
+                    Seller.addTheDishIntoSeller(isSpecial, seller, dishID, null);
                   })
                   .then((result) => {
                     if (seller.isConfigured == false && seller.pinCode) {

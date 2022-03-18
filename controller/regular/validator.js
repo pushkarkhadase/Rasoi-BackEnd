@@ -4,6 +4,9 @@ const Validator = require("../../models/validator");
 //importing the seller class
 const Seller = require("../../models/seller");
 
+//using fast2sms to use sms service
+const fast2sms = require("fast-two-sms");
+
 exports.getAllNonVadidatedSeller = (req, res, next) => {
   const validatorUsername = "Somesh Lad";
   let sellerArray = [];
@@ -48,6 +51,7 @@ exports.validateOrRejectSeller = (req, res, next) => {
 
   Seller.findByID(sellerID)
     .then((seller) => {
+      const sellerPhone = seller.mobileNo;
       if (seller) {
         if (action == "true") {
           //if the action is true we will validate the seller
@@ -56,7 +60,20 @@ exports.validateOrRejectSeller = (req, res, next) => {
               Validator.findByUsername("Somesh Lad")
                 .then((validator) => {
                   Validator.deleteSellerID(validator.sellerIds, sellerID).then(
-                    (result) => {
+                    async (result) => {
+                      var options = {
+                        authorization:
+                          "pXuZd7t3KgOslD9wQMeP6Joq2c4iCG8nfHFhN5kmzVYIr0RxTUJxKEpHnLvhFS2YVCd6ABoaeMPqiz4w",
+                        message:
+                          "Hey Seller,<br> Congratulations! Your Account has been verified, And you can Now login with your credentials(Mobile Number and Password) for setting up your dashboard. <br>Regards,<br>Rasoi Team.",
+                        numbers: [sellerPhone],
+                      };
+                      const response = await fast2sms
+                        .sendMessage(options)
+                        .then((sms_result) => {
+                          console.log("sms sent");
+                        })
+                        .catch((err) => console.log(err));
                       res.status(200).json({
                         message: "seller validated and queue is updated",
                       });
@@ -73,7 +90,20 @@ exports.validateOrRejectSeller = (req, res, next) => {
               Validator.findByUsername("Somesh Lad")
                 .then((validator) => {
                   Validator.deleteSellerID(validator.sellerIds, sellerID).then(
-                    (result) => {
+                    async (result) => {
+                      var options = {
+                        authorization:
+                          "pXuZd7t3KgOslD9wQMeP6Joq2c4iCG8nfHFhN5kmzVYIr0RxTUJxKEpHnLvhFS2YVCd6ABoaeMPqiz4w",
+                        message:
+                          "Hey Seller, We regret to inform you that your account has been temporarily rejected. This is either due to mismatch of documents or the images are not clear. Regards, Rasoi Team",
+                        numbers: [sellerPhone],
+                      };
+                      const response = await fast2sms
+                        .sendMessage(options)
+                        .then((sms_result) => {
+                          console.log("sms sent");
+                        })
+                        .catch((err) => console.log(err));
                       res.status(200).json({
                         message:
                           "seller rejected resulting into seller Deletion, queue updated!",

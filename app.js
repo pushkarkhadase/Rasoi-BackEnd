@@ -13,7 +13,6 @@ const multer = require("multer");
 //importing the CORS to resolve all the CORS errors
 const cors = require("cors");
 
-
 //function for storing information for recieved images
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {

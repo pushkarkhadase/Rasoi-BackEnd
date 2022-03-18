@@ -26,6 +26,8 @@ class Seller {
     this.isValidated = false;
     //since new seller have not added any of his menu we have kept it as false
     this.isConfigured = false;
+    //special dish name 
+    this.specialDishesNames = [];
   }
 
   //this function is saving the seller into the database
@@ -62,7 +64,7 @@ class Seller {
       });
   }
 
-  static addTheDishIntoSeller(isSpecial, seller, dishID) {
+  static addTheDishIntoSeller(isSpecial, seller, dishID , specialDishNames) {
     const db = getDb();
     const dishes =
       isSpecial == "true" ? seller.specialDishesIds : seller.dishIds;
@@ -72,7 +74,7 @@ class Seller {
         .collection("seller")
         .updateOne(
           { _id: new mongodb.ObjectId(seller._id) },
-          { $set: { specialDishesIds: dishes } }
+          { $set: { specialDishesIds: dishes, specialDishesNames : specialDishNames } }
         )
         .then((res) => {})
         .catch((err) => console.log(err));
@@ -161,6 +163,16 @@ class Seller {
     const db = getDb();
     return db.collection("seller").find({}).toArray();
   }
+
+  //static method for search seller and dishes
+  static searchSellerAndDishes(searchingString){
+    const db = getDb();
+    // db.collection("seller").createIndex({sellerName: "text", specialDishesNames: "text"});
+    db.collection("seller").createIndex({sellerName: 1, specialDishesNames: 1});
+    // return db.collection("seller").find({$text: { $search : {$regex : "p"}}}).toArray();
+    return db.collection("seller").find({$or : [{sellerName: {$regex: searchingString} },{specialDishesNames: {$regex:searchingString}}]}).toArray();
+  }
+
 }
 
 //exportting the seller
