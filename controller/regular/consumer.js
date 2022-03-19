@@ -32,6 +32,7 @@ exports.getConsumerDashbord = async (req, res, next) => {
     const sellers = await Seller.getAllSellers();
 
     for (sel of sellers) {
+      /*
       const dishes = await SellerDishes.findMultiSellerDishes(
         sel.specialDishesIds
       );
@@ -40,12 +41,13 @@ exports.getConsumerDashbord = async (req, res, next) => {
       dishes.map((dish) => {
         sellerDisheslist.push(dish.name);
       });
+      */
       let seller = {
         sellerID: sel._id,
         name: sel.sellerName,
         img: sel.casualImage,
         rating: sel.avgRating,
-        dishes: sellerDisheslist,
+        dishes: sel.specialDishesNames,
       };
       sellerData.push(seller);
     }
