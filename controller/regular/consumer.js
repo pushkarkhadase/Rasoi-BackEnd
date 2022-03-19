@@ -42,6 +42,7 @@ exports.getConsumerDashbord = async (req, res, next) => {
         sellerDisheslist.push(dish.name);
       });
       */
+
       let seller = {
         sellerID: sel._id,
         name: sel.sellerName,
@@ -49,7 +50,9 @@ exports.getConsumerDashbord = async (req, res, next) => {
         rating: sel.avgRating,
         dishes: sel.specialDishesNames,
       };
-      sellerData.push(seller);
+      if (sel.isConfigured === true && sel.isValidated === true) {
+        sellerData.push(seller);
+      }
     }
     res.status(200).json({
       consumerData: {
@@ -68,6 +71,9 @@ exports.getSearchSeller = async (req, res, next) => {
   const sellers = await Seller.searchSellerAndDishes(newString);
   let sellerList = [];
   for (let seller of sellers) {
+    //only return the seller who are configured and validated
+    console.log(seller.isValidated + " " + seller.isConfigured);
+
     let sellerModel = {
       sellerID: seller._id,
       name: seller.sellerName,
@@ -75,15 +81,17 @@ exports.getSearchSeller = async (req, res, next) => {
       rating: seller.avgRating,
       dishes: seller.specialDishesNames,
     };
-    sellerList.push(sellerModel);
+    if (seller.isValidated === true && seller.isConfigured === true) {
+      sellerList.push(sellerModel);
+    }
   }
   if (sellers.length > 0) {
     res.status(200).json({
       sellerList: sellerList,
     });
-  }else{
+  } else {
     res.status(404).json({
-      message: "No result found"
+      message: "No result found",
     });
   }
 };
