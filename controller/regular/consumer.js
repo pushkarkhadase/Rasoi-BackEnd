@@ -2,7 +2,7 @@ const Consumer = require("../../models/consumer");
 const Seller = require("../../models/seller");
 const SellerDishes = require("../../models/sellerDishes");
 
-const stringFormater = require('../../util/stringFormater');
+const stringFormater = require("../../util/stringFormater");
 
 // function stringFormating(bufferstring) {
 //   // string => pushkar khadase
@@ -75,9 +75,15 @@ exports.getSearchSeller = async (req, res, next) => {
     };
     sellerList.push(sellerModel);
   }
-  res.status(200).json({
-    sellerList: sellerList,
-  });
+  if (sellers.length > 0) {
+    res.status(200).json({
+      sellerList: sellerList,
+    });
+  }else{
+    res.status(404).json({
+      message: "No result found"
+    });
+  }
 };
 
 /*the following is the object i need to return at consumer for seller profile for consumer

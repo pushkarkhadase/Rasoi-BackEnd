@@ -68,12 +68,13 @@ exports.validateOrRejectSeller = (req, res, next) => {
                           "Hey Seller,<br> Congratulations! Your Account has been verified, And you can Now login with your credentials(Mobile Number and Password) for setting up your dashboard. <br>Regards,<br>Rasoi Team.",
                         numbers: [sellerPhone],
                       };
-                      const response = await fast2sms
-                        .sendMessage(options)
-                        .then((sms_result) => {
-                          console.log("sms sent");
-                        })
-                        .catch((err) => console.log(err));
+                      //uncomment this to start the sms service
+                      // const response = await fast2sms
+                      //   .sendMessage(options)
+                      //   .then((sms_result) => {
+                      //     console.log("sms sent");
+                      //   })
+                      //   .catch((err) => console.log(err));
                       res.status(200).json({
                         message: "seller validated and queue is updated",
                       });
@@ -98,12 +99,13 @@ exports.validateOrRejectSeller = (req, res, next) => {
                           "Hey Seller, We regret to inform you that your account has been temporarily rejected. This is either due to mismatch of documents or the images are not clear. Regards, Rasoi Team",
                         numbers: [sellerPhone],
                       };
-                      const response = await fast2sms
-                        .sendMessage(options)
-                        .then((sms_result) => {
-                          console.log("sms sent");
-                        })
-                        .catch((err) => console.log(err));
+                      //uncomment this tooo
+                      // const response = await fast2sms
+                      //   .sendMessage(options)
+                      //   .then((sms_result) => {
+                      //     console.log("sms sent");
+                      //   })
+                      //   .catch((err) => console.log(err));
                       res.status(200).json({
                         message:
                           "seller rejected resulting into seller Deletion, queue updated!",
