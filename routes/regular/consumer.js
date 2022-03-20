@@ -13,5 +13,8 @@ router.get("/consumerDashbord", consumerController.getConsumerDashbord);
 //GET /consumer/search
 router.get("/search", consumerController.getSearchSeller);
 
+//GET /consumer/filter
+router.get("/filter", consumerController.sortSellersInOrderFilter);
+
 //exporting the router
 module.exports = router;

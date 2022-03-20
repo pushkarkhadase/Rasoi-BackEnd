@@ -1,6 +1,5 @@
 const Consumer = require("../../models/consumer");
 const Seller = require("../../models/seller");
-const SellerDishes = require("../../models/sellerDishes");
 
 const stringFormater = require("../../util/stringFormater");
 
@@ -25,6 +24,7 @@ const stringFormater = require("../../util/stringFormater");
 
 exports.getConsumerDashbord = async (req, res, next) => {
   const consumerID = req.query.consumerID;
+
   let sellerData = [];
   //here
   try {
@@ -32,17 +32,6 @@ exports.getConsumerDashbord = async (req, res, next) => {
     const sellers = await Seller.getAllSellers();
 
     for (sel of sellers) {
-      /*
-      const dishes = await SellerDishes.findMultiSellerDishes(
-        sel.specialDishesIds
-      );
-      let sellerDisheslist = [];
-
-      dishes.map((dish) => {
-        sellerDisheslist.push(dish.name);
-      });
-      */
-
       let seller = {
         sellerID: sel._id,
         name: sel.sellerName,
@@ -93,6 +82,44 @@ exports.getSearchSeller = async (req, res, next) => {
     res.status(404).json({
       message: "No result found",
     });
+  }
+};
+
+exports.sortSellersInOrderFilter = async (req, res, next) => {
+  //ascending => true => 1
+  //descending => false => -1
+  try {
+    const consumerID = req.query.consumerID;
+    const order =
+      req.query.order === "true" || req.query.order === true ? 1 : -1;
+    const consumerRes = await Consumer.findById(consumerID);
+    if (consumerRes) {
+      const sortedSellerList = await Seller.getAllSellersInSortedOrder(order);
+      const sellerList = [];
+      for (let seller of sortedSellerList) {
+        let sellerModel = {
+          sellerID: seller._id,
+          name: seller.sellerName,
+          img: seller.casualImage,
+          rating: seller.avgRating,
+          dishes: seller.specialDishesNames,
+        };
+        if (seller.isValidated === true && seller.isConfigured === true) {
+          sellerList.push(sellerModel);
+        }
+      }
+      res.status(200).json({
+        sellers: sellerList,
+      });
+    } else {
+      res.status(403).json({
+        message: "invalid Consumer",
+      });
+    }
+  } catch {
+    (err) => {
+      console.log(err);
+    };
   }
 };
 

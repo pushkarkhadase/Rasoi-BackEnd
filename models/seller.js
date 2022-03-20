@@ -26,7 +26,7 @@ class Seller {
     this.isValidated = false;
     //since new seller have not added any of his menu we have kept it as false
     this.isConfigured = false;
-    //special dish name 
+    //special dish name
     this.specialDishesNames = [];
   }
 
@@ -64,7 +64,7 @@ class Seller {
       });
   }
 
-  static addTheDishIntoSeller(isSpecial, seller, dishID , specialDishNames) {
+  static addTheDishIntoSeller(isSpecial, seller, dishID, specialDishNames) {
     const db = getDb();
     const dishes =
       isSpecial == "true" ? seller.specialDishesIds : seller.dishIds;
@@ -74,7 +74,12 @@ class Seller {
         .collection("seller")
         .updateOne(
           { _id: new mongodb.ObjectId(seller._id) },
-          { $set: { specialDishesIds: dishes, specialDishesNames : specialDishNames } }
+          {
+            $set: {
+              specialDishesIds: dishes,
+              specialDishesNames: specialDishNames,
+            },
+          }
         )
         .then((res) => {})
         .catch((err) => console.log(err));
@@ -159,20 +164,36 @@ class Seller {
   }
 
   //static method for returning all the sellers into the database
-  static getAllSellers(){
+  static getAllSellers() {
     const db = getDb();
     return db.collection("seller").find({}).toArray();
   }
 
-  //static method for search seller and dishes
-  static searchSellerAndDishes(searchingString){
+  //static method for returning all the sellers form the database in the sorted order
+  static getAllSellersInSortedOrder(order) {
     const db = getDb();
-    // db.collection("seller").createIndex({sellerName: "text", specialDishesNames: "text"});
-    db.collection("seller").createIndex({sellerName: 1, specialDishesNames: 1});
-    // return db.collection("seller").find({$text: { $search : {$regex : "p"}}}).toArray();
-    return db.collection("seller").find({$or : [{sellerName: {$regex: searchingString} },{specialDishesNames: {$regex:searchingString}}]}).toArray();
+    return db.collection("seller").find({}).sort({avgRating : order}).toArray();
   }
 
+  //static method for search seller and dishes
+  static searchSellerAndDishes(searchingString) {
+    const db = getDb();
+    // db.collection("seller").createIndex({sellerName: "text", specialDishesNames: "text"});
+    db.collection("seller").createIndex({
+      sellerName: 1,
+      specialDishesNames: 1,
+    });
+    // return db.collection("seller").find({$text: { $search : {$regex : "p"}}}).toArray();
+    return db
+      .collection("seller")
+      .find({
+        $or: [
+          { sellerName: { $regex: searchingString } },
+          { specialDishesNames: { $regex: searchingString } },
+        ],
+      })
+      .toArray();
+  }
 }
 
 //exportting the seller
