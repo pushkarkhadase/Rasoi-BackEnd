@@ -1,3 +1,6 @@
+//importing the mongodb
+const mongodb = require("mongodb");
+
 //Importing the seller class model
 const Seller = require("../../models/seller");
 //Importing the validator class model
@@ -6,8 +9,8 @@ const SellerDishes = require("../../models/sellerDishes");
 //Importing the filehelper function in order to delete the files form the server
 const fileHelper = require("../../util/file");
 
-//Importing the String Formating function 
-const stringFormater = require('../../util/stringFormater');
+//Importing the String Formating function
+const stringFormater = require("../../util/stringFormater");
 
 exports.getSellerConfig = (req, res, next) => {
   const sellerID = req.query.sellerID;
@@ -92,7 +95,12 @@ exports.addDishesMenu = (req, res, next) => {
                   .then((result) => {
                     console.log(result);
                     dishID = result.insertedId;
-                    Seller.addTheDishIntoSeller(isSpecial, seller, dishID, updatedSpecialDishesNames);
+                    Seller.addTheDishIntoSeller(
+                      isSpecial,
+                      seller,
+                      dishID,
+                      updatedSpecialDishesNames
+                    );
                   })
                   .then((result) => {
                     //check if the seller is not configured before and seller
@@ -123,7 +131,12 @@ exports.addDishesMenu = (req, res, next) => {
                   .then((result) => {
                     console.log(result);
                     dishID = result.insertedId;
-                    Seller.addTheDishIntoSeller(isSpecial, seller, dishID, null);
+                    Seller.addTheDishIntoSeller(
+                      isSpecial,
+                      seller,
+                      dishID,
+                      null
+                    );
                   })
                   .then((result) => {
                     if (seller.isConfigured == false && seller.pinCode) {
@@ -256,7 +269,6 @@ exports.fillSellerDetails = (req, res, next) => {
   }
 };
 
-//under maintanance
 exports.getSellerDashbord = (req, res, next) => {
   const sellerID = req.query.sellerID;
   let specicalDishBuffer = [];
@@ -274,14 +286,55 @@ exports.getSellerDashbord = (req, res, next) => {
           .then((result) => {
             console.log("printing the normal dishes");
             console.log(result);
-            result.forEach(dish => {
-              generalDishBuffer.push(dish);              
+            result.forEach((dish) => {
+              generalDishBuffer.push(dish);
             });
           })
           .then((result) => {
             // console.log(specicalDishBuffer);
+            /*the following is the object i need to return at consumer for seller profile for consumer
+{
+  sellerInfo:{
+    _id:
+    name:
+    specialDishesNames:[a , b , c]
+    imgUrl:
+    address:
+    pin:
+    social:{
+      facebook:
+      instagram:
+    }
+    rating:
+    mobileNo:
+    email:
+  }
+
+  specialDishes:[{
+    _id:
+    name:
+    img:
+    price:
+    type:
+    time:
+  }]
+
+  generalDishes:[{
+    _id:
+    name:
+    img:
+    price:
+    type:
+    time:
+  }]
+
+}
+
+
+*/
             return res.status(200).json({
-              data: {
+              sellerInfo: {
+                id: seller._id,
                 img: seller.casualImage,
                 name: seller.sellerName,
                 areaName: seller.areaName,
@@ -291,9 +344,13 @@ exports.getSellerDashbord = (req, res, next) => {
                 facebook: seller.socialMedia.facebookURL,
                 instagram: seller.socialMedia.instagramURL,
                 bio: seller.bio,
-                specialDishes: specicalDishBuffer,
-                generalDishes: generalDishBuffer,
               },
+              specialDishes: {
+                specialDishes: specicalDishBuffer,
+                specialDishesNames: seller.specialDishesNames              },
+              generalDishes: {
+                generalDishes: generalDishBuffer,
+              }
             });
           })
           .catch((err) => console.log(err));
@@ -308,4 +365,180 @@ exports.getSellerDashbord = (req, res, next) => {
       }
     })
     .catch((err) => console.log(err));
+};
+
+exports.editSellerInfo = async (req, res, next) => {
+  const sellerID = req.body.sellerID;
+  const seller = await Seller.findByID(sellerID);
+  let sellerNewImage = req.files.length > 0 ? req.files[0].path : null;
+  let pinCode = req.body.pinCode;
+  let address = req.body.areaName;
+  let bio = req.body.bio;
+  let facebook = req.body.facebook;
+  let instagram = req.body.instagram;
+
+  if (seller) {
+    if (sellerNewImage == null || sellerNewImage == "null") {
+      sellerNewImage = seller.casualImage;
+    } else {
+      fileHelper.deleteFile(seller.casualImage);
+    }
+    if (pinCode == null || pinCode == "null") {
+      pinCode = seller.pinCode;
+    }
+    if (address == null || address == "null") {
+      address = seller.areaName;
+    }
+    if (bio == null || bio == "null") {
+      bio = seller.bio;
+    }
+    if (facebook == null || facebook == "null") {
+      facebook = seller.socialMedia.facebookURL;
+    }
+    if (instagram == null || instagram == "null") {
+      instagram = seller.socialMedia.instagramURL;
+    }
+    const socialMedia = {
+      facebookURL: facebook,
+      instagramURL: instagram,
+    };
+    const result = await Seller.updateSellerInfo(
+      sellerID,
+      sellerNewImage,
+      pinCode,
+      address,
+      bio,
+      socialMedia
+    );
+    if (result) {
+      res.status(200).json({
+        message: "seller updated!",
+      });
+    }
+  } else {
+    res.status(403).json({
+      message: "invalid seller",
+    });
+  }
+};
+//under maintanance
+exports.editSellerDish = async (req, res, next) => {
+  const dishID = req.body.dishID;
+  const sellerID = req.body.sellerID;
+  let name = req.body.name;
+  let type = req.body.type;
+  let price = req.body.price;
+  let time = req.body.time;
+  let newImage = req.files.length > 0 ? req.files[0].path : null;
+  const seller = await Seller.findByID(sellerID);
+  const dish = await SellerDishes.findDishByID(dishID);
+
+  if (dish && seller) {
+    console.log(dish);
+    if (name == null || name == "null") {
+      console.log(name);
+      name = dish.name;
+      console.log(dish.name);
+      console.log(name);
+    }
+    if (type == null || type == "null") {
+      type = dish.type;
+    }
+    if (price == null || price == "null") {
+      price = dish.price;
+    }
+    if (time == null || time == "null") {
+      time = dish.time;
+    }
+    if (newImage == null || newImage == "null") {
+      newImage = dish.imageURL;
+    } else {
+      fileHelper.deleteFile(imageURL);
+    }
+    if(dish.isSpecial == "true" || dish.isSpecial == true){
+      let sdnArray = seller.specialDishesNames;
+      let dishIndex = sdnArray.indexOf(dish.name);
+      sdnArray.splice(dishIndex,1,name);
+      const sellerUpdate = await Seller.updateSpecialDishNameArray(sellerID,sdnArray);
+    }
+    
+
+    const result = await SellerDishes.updateDish(
+      dishID,
+      name,
+      type,
+      price,
+      time,
+      newImage
+    );
+    if (result) {
+      res.status(200).json({
+        message: "Dish updated successfully!",
+      });
+    }
+  } else {
+    res.status(403).json({
+      message: "invalid dish ID or seller ID",
+    });
+  }
+};
+//under developement
+exports.deleteSellerDish = async (req, res, next) => {
+  const sellerID = req.body.sellerID;
+  const dishID = req.body.dishID;
+
+  const seller = await Seller.findByID(sellerID);
+  const dish = await SellerDishes.findDishByID(dishID);
+
+  if (seller && dish) {
+    let sellerDishIdArray;
+    const deleteImage = await fileHelper.deleteFile(dish.imageURL);
+    console.log(deleteImage);
+
+    if (dish.isSpecial == "true" || dish.isSpecial == true) {
+      sellerDishIdArray = seller.specialDishesIds;
+      let sellerDishNameArray = seller.specialDishesNames;
+      let itemIndex = sellerDishIdArray.findIndex((id) => {
+        return id.toString() === dish._id.toString();
+      });
+
+      sellerDishIdArray.splice(itemIndex, 1);
+      sellerDishNameArray = seller.specialDishesNames;
+      itemIndex = sellerDishNameArray.indexOf(dish.name);
+      sellerDishNameArray.splice(itemIndex, 1);
+
+      const sellerDishDelete = await SellerDishes.deleteDish(dishID);
+      console.log(sellerDishDelete)
+      const sellerUpdate = await Seller.updateDeletedSellerDishRecord(
+        sellerID,
+        sellerDishIdArray,
+        sellerDishNameArray,
+        true
+      );
+      res.status(403).json({
+        message: "Special dish deleted",
+      });
+    } else{
+      sellerDishIdArray = seller.dishIds;
+      let itemIndex = sellerDishIdArray.findIndex((id) => {
+        return id.toString() === dish._id.toString();
+      });
+      sellerDishIdArray.splice(itemIndex, 1);
+      const sellerDishDelete = await SellerDishes.deleteDish(dishID);
+      console.lof(sellerDishDelete)
+      const sellerUpdate = await Seller.updateDeletedSellerDishRecord(
+        sellerID,
+        sellerDishIdArray,
+        null,
+        false
+      );
+      res.status(403).json({
+        message: "General dish deleted",
+      });
+    }
+  } else {
+    res.status(403).json({
+      message: "seller ID or dishID is incorrect",
+    });
+  }
 };

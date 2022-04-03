@@ -32,10 +32,38 @@ class SellerDishes {
     const db = getDb();
     return db
       .collection("sellerDishes")
-      .find({ _id: { $in: [...dishIDs] }})
+      .find({ _id: { $in: [...dishIDs] } })
       .toArray();
   }
+  static findDishByID(dishID) {
+    const db = getDb();
+    return db
+      .collection("sellerDishes")
+      .findOne({ _id: new mongodb.ObjectId(dishID) });
+  }
 
+  static updateDish(dishID, name, type, price, timeReq, imageURL) {
+    const db = getDb();
+    return db.collection("sellerDishes").updateOne(
+      { _id: new mongodb.ObjectId(dishID) },
+      {
+        $set: {
+          name: name,
+          type: type,
+          price: price,
+          timeReq: timeReq,
+          imageURL: imageURL,
+        },
+      }
+    );
+  }
+  static deleteDish(dishID) {
+    const db = getDb();
+    console.log("dish id is => " + dishID);
+    return db
+      .collection("sellerDishes")
+      .deleteOne({ _id: new mongodb.ObjectId(dishID) });
+  }
 }
 
 module.exports = SellerDishes;

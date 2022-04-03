@@ -172,7 +172,11 @@ class Seller {
   //static method for returning all the sellers form the database in the sorted order
   static getAllSellersInSortedOrder(order) {
     const db = getDb();
-    return db.collection("seller").find({}).sort({avgRating : order}).toArray();
+    return db
+      .collection("seller")
+      .find({})
+      .sort({ avgRating: order })
+      .toArray();
   }
 
   //static method for search seller and dishes
@@ -193,6 +197,58 @@ class Seller {
         ],
       })
       .toArray();
+  }
+
+  //static method for updating the seller information
+  static updateSellerInfo(
+    sellerID,
+    casualImage,
+    pinCode,
+    areaName,
+    bio,
+    socialMedia
+  ) {
+    const db = getDb();
+    return db.collection("seller").updateOne(
+      { _id: new mongodb.ObjectId(sellerID) },
+      {
+        $set: {
+          casualImage: casualImage,
+          pinCode: pinCode,
+          areaName: areaName,
+          bio: bio,
+          socialMedia: socialMedia,
+        },
+      }
+    );
+  }
+
+  static updateDeletedSellerDishRecord(sellerID, dishids, dishName, isSpecial) {
+    const db = getDb();
+    if (isSpecial == "false" || isSpecial == false) {
+      return db
+        .collection("seller")
+        .updateOne(
+          { _id: new mongodb.ObjectId(sellerID) },
+          { $set: { dishIds: dishids } }
+        );
+    } else {
+      return db
+        .collection("seller")
+        .updateOne(
+          { _id: new mongodb.ObjectId(sellerID) },
+          { $set: { specialDishesIds: dishids, specialDishNames: dishName } }
+        );
+    }
+  }
+  static updateSpecialDishNameArray(sellerID, updatedNames) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .updateOne(
+        { _id: new mongodb.ObjectId(sellerID) },
+        { $set: { specialDishesNames: updatedNames } }
+      );
   }
 }
 

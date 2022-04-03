@@ -46,6 +46,8 @@ exports.getConsumerDashbord = async (req, res, next) => {
     res.status(200).json({
       consumerData: {
         consumerImage: consumer.customerImage ? consumer.customerImage : null,
+        consumerName: consumer.name,
+        consumerAddress: consumer.address,
       },
       sellersData: sellerData,
     });
@@ -123,43 +125,3 @@ exports.sortSellersInOrderFilter = async (req, res, next) => {
   }
 };
 
-/*the following is the object i need to return at consumer for seller profile for consumer
-{
-  sellerInfo:{
-    _id:
-    name:
-    specialDishesNames:[a , b , c]
-    imgUrl:
-    address:
-    pin:
-    social:{
-      facebook:
-      instagram:
-    }
-    rating:
-    mobileNo:
-    email:
-  }
-
-  specialDishes:[{
-    _id:
-    name:
-    img:
-    price:
-    type:
-    time:
-  }]
-
-  generalDishes:[{
-    _id:
-    name:
-    img:
-    price:
-    type:
-    time:
-  }]
-
-}
-
-
-*/

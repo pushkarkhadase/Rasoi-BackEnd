@@ -17,7 +17,16 @@ router.post('/addDishes', sellerRegController.addDishesMenu);
 router.put('/fillSellerDetails', sellerRegController.fillSellerDetails);
 
 // GET /seller/sellerDashboard
-router.get("/sellerDashboard", sellerRegController.getSellerDashbord)
+router.get("/sellerDashboard", sellerRegController.getSellerDashbord);
+
+//PUT /seller/editSellerInfo
+router.put("/editSellerInfo", sellerRegController.editSellerInfo);
+
+//PUT /seller/editDish
+router.put("/editDish", sellerRegController.editSellerDish);
+
+//DELETE /seller/deleteDish
+router.delete("/deleteDish", sellerRegController.deleteSellerDish);
 
 //exporting the router
 module.exports = router;
