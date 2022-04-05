@@ -14,6 +14,7 @@ class Consumer {
     this.customerOrderIds = [];
     //initially customer image is kept as null
     this.customerImage = null;
+    this.orders = [];
   }
 
   // this is the function for saving the user into the database,
@@ -47,6 +48,16 @@ class Consumer {
         return result;
       })
       .catch((err) => console.log(err));
+  }
+
+  static updateOrderQueue(consumerID, newOrders) {
+    const db = getDb();
+    return db
+      .collection("consumer")
+      .updateOne(
+        { _id: new mongodb.ObjectId(consumerID) },
+        { $set: { orders: newOrders } }
+      );
   }
 }
 

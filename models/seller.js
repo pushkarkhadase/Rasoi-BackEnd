@@ -28,6 +28,7 @@ class Seller {
     this.isConfigured = false;
     //special dish name
     this.specialDishesNames = [];
+    this.orders = [];
   }
 
   //this function is saving the seller into the database
@@ -248,6 +249,15 @@ class Seller {
       .updateOne(
         { _id: new mongodb.ObjectId(sellerID) },
         { $set: { specialDishesNames: updatedNames } }
+      );
+  }
+  static updateOrderQueue(sellerID, newOrders) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .updateOne(
+        { _id: new mongodb.ObjectId(sellerID) },
+        { $set: { orders: newOrders } }
       );
   }
 }

@@ -23,7 +23,6 @@ const fileStorage = multer.diskStorage({
   },
 });
 
-
 //function for filtering the file types like JPEG, PNG
 const fileFilter = (req, file, cb) => {
   if (
@@ -38,10 +37,8 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-
 //importing the mongoClient to connect into the mongodb database
 const mongoConnect = require("./util/database").mongoConnect;
-
 
 //importing the consumer Authentication routes to use all consumer related routes
 const consumerAuthRoutes = require("./routes/Auth/consumer");
@@ -57,6 +54,8 @@ const sellerRegularRoutes = require("./routes/regular/seller");
 //importing the Validator Regualar routes to use all the validator related routes
 const validatorRegularRoutes = require("./routes/regular/validator");
 
+// order routes
+const consumerOrderRoutes = require("./routes/orders/consumer");
 
 //intializing the express into the app
 const app = express();
@@ -78,7 +77,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 // Solving the CORS errors
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); //Allowing the access from all the domains
-  //allowing the following methods 
+  //allowing the following methods
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, PATCH, DELETE"
@@ -87,7 +86,6 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "*");
   next();
 });
-
 
 //using the consumer routes
 app.use("/consumer", consumerAuthRoutes);
@@ -107,7 +105,10 @@ app.use("/validator", validatorRegularRoutes);
 //using the consumer Regualr routes
 app.use("/consumer", consumerRegularRoutes);
 
-//connnecting the mongodb 
+//order routes
+app.use("/consumer",consumerOrderRoutes);
+
+//connnecting the mongodb
 mongoConnect(() => {
   app.listen(process.env.PORT || 8080);
 });
