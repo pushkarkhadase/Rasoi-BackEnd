@@ -344,6 +344,7 @@ exports.getSellerDashbord = (req, res, next) => {
                 facebook: seller.socialMedia.facebookURL,
                 instagram: seller.socialMedia.instagramURL,
                 bio: seller.bio,
+                rating: seller.avgRating
               },
               specialDishes: {
                 specialDishes: specicalDishBuffer,
