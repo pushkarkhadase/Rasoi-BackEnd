@@ -430,6 +430,7 @@ exports.editSellerDish = async (req, res, next) => {
   let type = req.body.type;
   let price = req.body.price;
   let time = req.body.time;
+
   let newImage = req.files.length > 0 ? req.files[0].path : null;
   const seller = await Seller.findByID(sellerID);
   const dish = await SellerDishes.findDishByID(dishID);
@@ -449,7 +450,7 @@ exports.editSellerDish = async (req, res, next) => {
       price = dish.price;
     }
     if (time == null || time == "null") {
-      time = dish.time;
+      time = dish.timeReq;
     }
     if (newImage == null || newImage == "null") {
       newImage = dish.imageURL;
@@ -516,7 +517,7 @@ exports.deleteSellerDish = async (req, res, next) => {
         sellerDishNameArray,
         true
       );
-      res.status(403).json({
+      res.status(200).json({
         message: "Special dish deleted",
       });
     } else{
@@ -533,7 +534,7 @@ exports.deleteSellerDish = async (req, res, next) => {
         null,
         false
       );
-      res.status(403).json({
+      res.status(200).json({
         message: "General dish deleted",
       });
     }
