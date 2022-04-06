@@ -41,7 +41,7 @@ function getDate() {
     " " +
     year +
     " at " +
-    hrs +
+    hours +
     ":" +
     mins +
     " " +
