@@ -9,7 +9,6 @@ function getDate() {
   let year = dateObj.getFullYear();
   let hrs = dateObj.getHours();
   let mins = dateObj.getMinutes();
-  day += 1;
   const dayArr = [
     "JAN",
     "FEB",
