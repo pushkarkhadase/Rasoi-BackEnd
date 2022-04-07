@@ -67,7 +67,7 @@ exports.acceptOrRejectOrders = async (req, res, next) => {
       });
     }
   } else {
-    res.status(304).json({
+    res.status(403).json({
       message: "invalid seller or order ID",
     });
   }
