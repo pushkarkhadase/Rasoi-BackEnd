@@ -14,10 +14,15 @@ exports.getSellerOrders = async (req, res, next) => {
         sellerOrders.push(order);
       }
     }
-
-    res.status(200).json({
-      orders: sellerOrders,
-    });
+    if (sellerOrders.length() > 0) {
+      res.status(200).json({
+        orders: sellerOrders,
+      });
+    } else {
+      res.status(200).json({
+        message: "no orders till now!!!",
+      });
+    }
   } else {
     res.status(403).json({
       message: "invalid Seller",
@@ -42,6 +47,7 @@ exports.acceptOrRejectOrders = async (req, res, next) => {
       );
       return res.status(200).json({
         message: "Order is been Prepared",
+        state: "Prepairing",
       });
       //   order.save();
     } else {
@@ -80,7 +86,10 @@ exports.markAsDeliver = async (req, res, next) => {
   const order = await Order.findById(orderID);
 
   if (seller && order) {
-    const updateOrderStatus = await Order.updateOrderStatus(orderID, "Delivered");
+    const updateOrderStatus = await Order.updateOrderStatus(
+      orderID,
+      "Delivered"
+    );
     return res.status(200).json({ message: "Status changed to delivered" });
   } else {
     return res.status(304).json({
