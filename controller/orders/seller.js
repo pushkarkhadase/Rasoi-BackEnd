@@ -1,7 +1,6 @@
 const Seller = require("../../models/seller");
 const Order = require("../../models/orders");
 const Consumer = require("../../models/consumer");
-const { updateOrderStatus } = require("../../models/orders");
 
 exports.getSellerOrders = async (req, res, next) => {
   const sellerID = req.body.sellerID;
@@ -20,7 +19,7 @@ exports.getSellerOrders = async (req, res, next) => {
       orders: sellerOrders,
     });
   } else {
-    res.status(200).json({
+    res.status(403).json({
       message: "invalid Seller",
     });
   }
