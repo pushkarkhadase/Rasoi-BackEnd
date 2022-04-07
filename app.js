@@ -56,6 +56,7 @@ const validatorRegularRoutes = require("./routes/regular/validator");
 
 // order routes
 const consumerOrderRoutes = require("./routes/orders/consumer");
+const sellerOrderRoutes = require("./routes/orders/seller");
 
 //intializing the express into the app
 const app = express();
@@ -107,7 +108,7 @@ app.use("/consumer", consumerRegularRoutes);
 
 //order routes
 app.use("/consumer",consumerOrderRoutes);
-
+app.use("/seller", sellerOrderRoutes);
 //connnecting the mongodb
 mongoConnect(() => {
   app.listen(process.env.PORT || 8080);

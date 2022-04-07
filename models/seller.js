@@ -20,7 +20,6 @@ class Seller {
     this.socialMedia = {};
     this.dishIds = [];
     this.specialDishesIds = [];
-    this.orderIds = [];
     this.avgRating = 3;
     //since new seller is yet to be valified we have kept it as false
     this.isValidated = false;
@@ -238,7 +237,7 @@ class Seller {
         .collection("seller")
         .updateOne(
           { _id: new mongodb.ObjectId(sellerID) },
-          { $set: { specialDishesIds: dishids, specialDishNames: dishName } }
+          { $set: { specialDishesIds: dishids, specialDishesNames: dishName } }
         );
     }
   }
@@ -258,6 +257,16 @@ class Seller {
       .updateOne(
         { _id: new mongodb.ObjectId(sellerID) },
         { $set: { orders: newOrders } }
+      );
+  }
+
+  static deleteOrderID(sellerId, orderIds) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .updateOne(
+        { _id: new mongodb.ObjectId(sellerId) },
+        { $set: { orders: orderIds } }
       );
   }
 }

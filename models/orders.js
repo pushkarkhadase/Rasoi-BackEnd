@@ -17,7 +17,7 @@ class Orders {
     this.dishes = dishes;
     this.consumerPhoneNo = consumerPhoneNo;
     this.consumerName = consumerName;
-    this.orderStatus = "pending";
+    this.orderStatus = "Pending";
     this.sellerId = sellerId;
     this.sellerName = sellerName;
     this.dateTime = dateTime;
@@ -36,6 +36,23 @@ class Orders {
       .collection("orders")
       .find({ _id: { $in: [...orderIDs] } })
       .toArray();
+  }
+
+  static findById(orderID) {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .findOne({ _id: new mongodb.ObjectId(orderID) });
+  }
+
+  static updateOrderStatus(orderID, status) {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .updateOne(
+        { _id: new mongodb.ObjectId(orderID) },
+        { $set: { orderStatus: status } }
+      );
   }
 }
 
