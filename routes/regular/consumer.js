@@ -16,5 +16,8 @@ router.get("/search", consumerController.getSearchSeller);
 //GET /consumer/filter
 router.get("/filter", consumerController.sortSellersInOrderFilter);
 
+//GET /consumer/profile
+router.get("/profile", consumerController.getConsumerProfile);
+
 //exporting the router
 module.exports = router;

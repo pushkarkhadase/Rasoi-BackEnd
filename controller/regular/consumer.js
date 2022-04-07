@@ -1,5 +1,6 @@
 const Consumer = require("../../models/consumer");
 const Seller = require("../../models/seller");
+const Order = require("../../models/orders");
 
 const stringFormater = require("../../util/stringFormater");
 
@@ -125,4 +126,25 @@ exports.sortSellersInOrderFilter = async (req, res, next) => {
   }
 };
 
-
+exports.getConsumerProfile = async (req, res, next) => {
+  const consumerID = req.query.consumerID;
+  const consumer = await Consumer.findById(consumerID);
+  if (consumer) {
+    const orders = [];
+    const consumerData = {
+      name: consumer.name,
+      mobile: consumer.mobileNo,
+      address: consumer.address,
+      img: consumer.customerImage,
+    };
+    const orderIDs = consumer.orders;
+    const allOrders = await Order.findAllOrdersByIds(orderIDs);
+    for(let order of allOrders){
+      orders.push(order);
+    }
+    res.status(200).json({
+      consumerInfo: consumerData,
+      ordersInfo : orders
+    })
+  }
+};

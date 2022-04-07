@@ -54,6 +54,14 @@ class Orders {
         { $set: { orderStatus: status } }
       );
   }
+
+  static findAllOrdersByIds(orderIDs) {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .find({ _id: { $in: [... orderIDs] } })
+      .toArray();
+  }
 }
 
 module.exports = Orders;

@@ -14,9 +14,10 @@ exports.getSellerOrders = async (req, res, next) => {
         sellerOrders.push(order);
       }
     }
-    if (sellerOrders.length() > 0) {
+    if (sellerOrders.length > 0) {
       res.status(200).json({
         orders: sellerOrders,
+        message:"orders"
       });
     } else {
       res.status(200).json({
