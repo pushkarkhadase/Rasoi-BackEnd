@@ -142,7 +142,6 @@ exports.getConsumerProfile = async (req, res, next) => {
     const allOrders = await Order.findAllOrdersByIds(orderIDs);
     for (let order of allOrders) {
       let seller = await Seller.findByID(order.sellerId);
-      console.log(seller);
       const orderDetails = {
         orderID: order._id,
         sellerName: order.sellerName,
@@ -171,23 +170,21 @@ exports.editConsumerProfile = async (req, res, next) => {
   ) {
     const consumerID = req.body.consumerID;
     let consumerNewImage = req.files.length > 0 ? req.files[0].path : null;
+    console.log(consumerNewImage);
     let name = req.body.name;
     let address = req.body.address;
     const consumer = await Consumer.findById(consumerID);
     console.log(req.body);
     if (consumer) {
       if (
-        consumerNewImage == null ||
-        consumerNewImage == "null" ||
-        req.body.image == "null" ||
-        req.body.image == null ||
-        req.body.image == ""
+        (consumerNewImage == null || consumerNewImage == "null") &&
+        (req.body.image == "null" || req.body.image == null)
       ) {
         consumerNewImage = consumer.customerImage;
         console.log("in the if");
       } else {
         if (consumer.customerImage) {
-          console.log("in hte else  if");
+          console.log("in the else  if");
           fileHelper.deleteFile(consumer.customerImage);
         }
       }
