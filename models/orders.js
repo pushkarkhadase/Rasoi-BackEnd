@@ -59,8 +59,17 @@ class Orders {
     const db = getDb();
     return db
       .collection("orders")
-      .find({ _id: { $in: [... orderIDs] } })
+      .find({ _id: { $in: [...orderIDs] } })
       .toArray();
+  }
+  static rateOrder(orderID) {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .updateOne(
+        { _id: new mongodb.ObjectId(orderID) },
+        { $set: { isRated: true } }
+      );
   }
 }
 

@@ -9,5 +9,7 @@ const consumerOrderController = require("../../controller/orders/consumer");
 
 router.post('/placeOrder', consumerOrderController.placeOrder);
 
+router.post("/rateSeller", consumerOrderController.rateSeller);
+
 //exporting the router
 module.exports = router;

@@ -59,6 +59,16 @@ class Consumer {
         { $set: { orders: newOrders } }
       );
   }
+
+  static updateConsumerDetails(consumerID, name, address, customerImage) {
+    const db = getDb();
+    return db
+      .collection("consumer")
+      .updateOne(
+        { _id: new mongodb.ObjectId(consumerID) },
+        { $set: { name: name, address: address, customerImage: customerImage } }
+      );
+  }
 }
 
 //exporting the consumer class

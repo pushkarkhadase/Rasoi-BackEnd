@@ -28,6 +28,8 @@ class Seller {
     //special dish name
     this.specialDishesNames = [];
     this.orders = [];
+    this.avgRatingNumerator = 3;
+    this.avgRatingDinominator = 1;
   }
 
   //this function is saving the seller into the database
@@ -267,6 +269,22 @@ class Seller {
       .updateOne(
         { _id: new mongodb.ObjectId(sellerId) },
         { $set: { orders: orderIds } }
+      );
+  }
+
+  static updateRatingsParameters(sellerId, numerator, dinominator , avgRating) {
+    const db = getDb();
+    return db
+      .collection("seller")
+      .updateOne(
+        { _id: new mongodb.ObjectId(sellerId) },
+        {
+          $set: {
+            avgRatingNumerator: numerator,
+            avgRatingDinominator: dinominator,
+            avgRating:avgRating
+          },
+        }
       );
   }
 }

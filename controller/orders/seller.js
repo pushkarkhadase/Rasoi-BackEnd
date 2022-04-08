@@ -9,8 +9,10 @@ exports.getSellerOrders = async (req, res, next) => {
   if (seller) {
     const sellerOrders = [];
     const allOrders = await Order.findIncompleteOrders(seller.orders);
+    
     for (let order of allOrders) {
       if (order.orderStatus == "Pending" || order.orderStatus == "Prepairing") {
+        
         sellerOrders.push(order);
       }
     }

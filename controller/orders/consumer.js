@@ -48,7 +48,6 @@ function getDate() {
     meridian);
 }
 
-
 exports.placeOrder = async (req, res, next) => {
   const consumerID = req.body.consumerID;
   const sellerID = req.body.sellerID;
@@ -72,17 +71,23 @@ exports.placeOrder = async (req, res, next) => {
       newDate,
       totalCost
     );
-        // need to work on the queue system
+    // need to work on the queue system
 
     const orderResult = await order.save();
     console.log(orderResult.insertedId);
     const sellerOrderQueue = seller.orders;
     sellerOrderQueue.push(orderResult.insertedId);
-    
-    const updateSellerQueue = await Seller.updateOrderQueue(sellerID, sellerOrderQueue);
+
+    const updateSellerQueue = await Seller.updateOrderQueue(
+      sellerID,
+      sellerOrderQueue
+    );
     const consumerOrderQueue = consumer.orders;
     consumerOrderQueue.push(orderResult.insertedId);
-    const updateConsumerQueue = await Consumer.updateOrderQueue(consumerID, consumerOrderQueue);
+    const updateConsumerQueue = await Consumer.updateOrderQueue(
+      consumerID,
+      consumerOrderQueue
+    );
 
     res.status(201).json({
       message: "Order Placed",
@@ -90,6 +95,41 @@ exports.placeOrder = async (req, res, next) => {
   } else {
     res.status(403).json({
       message: "Seller or Consumer invalid",
+    });
+  }
+};
+
+exports.rateSeller = async (req, res, next) => {
+  const sellerID = req.body.sellerID;
+  const consumerID = req.body.consumerID;
+  const orderID = req.body.orderID;
+  const rating = req.body.rating;
+
+  const seller = await Seller.findByID(sellerID);
+  const consumer = await Consumer.findById(consumerID);
+  const order = await Orders.findById(orderID);
+  if (seller && consumer && order) {
+    const rateOrder = await Orders.rateOrder(orderID);
+    let numerator = seller.avgRatingNumerator;
+    let dinominator = seller.avgRatingDinominator;
+
+    numerator += rating;
+    dinominator++;
+   let average =  (numerator / dinominator);
+   average.toPrecision(2)
+    
+    const updateRatingsParameters = await Seller.updateRatingsParameters(
+      sellerID,
+      numerator,
+      dinominator,
+      average
+    );
+    return res.status(200).json({
+      message: "seller rated!",
+    });
+  } else {
+    res.status(403).json({
+      message: "invalid seller, consumer or order IDs",
     });
   }
 };
