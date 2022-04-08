@@ -145,6 +145,7 @@ exports.getConsumerProfile = async (req, res, next) => {
       const orderDetails = {
         orderID: order._id,
         sellerName: order.sellerName,
+        sellerID : seller._id,
         areaName: seller ? seller.areaName : null,
         pincode: seller ? seller.pinCode : null,
         totalCost: order.totalCost,
