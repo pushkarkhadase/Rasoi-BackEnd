@@ -19,9 +19,6 @@ router.get("/filter", consumerController.sortSellersInOrderFilter);
 //GET /consumer/profile
 router.get("/profile", consumerController.getConsumerProfile);
 
-//PUT /consumer/getEditProfile
-router.get("/getEditProfile", consumerController.getEditProfile);
-
 //PUT /consumer/editProfile
 router.put("/editProfile", consumerController.editConsumerProfile);
 

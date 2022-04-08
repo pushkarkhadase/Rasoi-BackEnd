@@ -164,46 +164,58 @@ exports.getConsumerProfile = async (req, res, next) => {
 };
 
 exports.editConsumerProfile = async (req, res, next) => {
-  const consumerID = req.body.consumerID;
-  let consumerNewImage = req.files.length > 0 ? req.files[0].path : null;
-  let name = req.body.name;
-  let address = req.body.address;
-  const consumer = await Consumer.findById(consumerID);
-  console.log(req.body);
-  if (consumer) {
-    if (consumerNewImage == null || consumerNewImage == "null") {
-      consumerNewImage = consumer.customerImage;
-      console.log("in hte if");
-    } else {
-      if (consumer.customerImage) {
-        console.log("in hte else  if");
-        fileHelper.deleteFile(consumer.customerImage);
+  if (
+    req.files != undefined ||
+    req.files != "undefined" ||
+    req.body.image != undefined
+  ) {
+    const consumerID = req.body.consumerID;
+    let consumerNewImage = req.files.length > 0 ? req.files[0].path : null;
+    let name = req.body.name;
+    let address = req.body.address;
+    const consumer = await Consumer.findById(consumerID);
+    console.log(req.body);
+    if (consumer) {
+      if (
+        consumerNewImage == null ||
+        consumerNewImage == "null" ||
+        req.body.image == "null" ||
+        req.body.image == null ||
+        req.body.image == ""
+      ) {
+        consumerNewImage = consumer.customerImage;
+        console.log("in the if");
+      } else {
+        if (consumer.customerImage) {
+          console.log("in hte else  if");
+          fileHelper.deleteFile(consumer.customerImage);
+        }
       }
-    }
-    if (name == "" || name == "null" || name == null) {
-      name = consumer.name;
-    }
+      if (name == "" || name == "null" || name == null) {
+        name = consumer.name;
+      }
 
-    if (address == "" || address == "null" || address == null) {
-      address = consumer.address;
-    }
-    console.log(name);
-    console.log(address);
-    const result = await Consumer.updateConsumerDetails(
-      consumerID,
-      name,
-      address,
-      consumerNewImage
-    );
-    if (result) {
-      res.status(200).json({
-        message: "Consumer updated!",
+      if (address == "" || address == "null" || address == null) {
+        address = consumer.address;
+      }
+      console.log(name);
+      console.log(address);
+      const result = await Consumer.updateConsumerDetails(
+        consumerID,
+        name,
+        address,
+        consumerNewImage
+      );
+      if (result) {
+        res.status(200).json({
+          message: "Consumer updated!",
+        });
+      }
+    } else {
+      res.status(403).json({
+        message: "invalid Consumer",
       });
     }
-  } else {
-    res.status(403).json({
-      message: "invalid Consumer",
-    });
   }
 };
 exports.getEditProfile = async (req, res, next) => {
@@ -219,5 +231,3 @@ exports.getEditProfile = async (req, res, next) => {
     res.status("invalid consumerID");
   }
 };
-
-
