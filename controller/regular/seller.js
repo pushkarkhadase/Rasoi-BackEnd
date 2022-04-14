@@ -486,8 +486,8 @@ exports.editSellerDish = async (req, res, next) => {
 };
 //under developement
 exports.deleteSellerDish = async (req, res, next) => {
-  const sellerID = req.body.sellerID;
-  const dishID = req.body.dishID;
+  const sellerID = req.query.sellerID;
+  const dishID = req.query.dishID;
 
   const seller = await Seller.findByID(sellerID);
   const dish = await SellerDishes.findDishByID(dishID);

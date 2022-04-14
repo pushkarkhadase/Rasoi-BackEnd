@@ -105,6 +105,7 @@ exports.rateSeller = async (req, res, next) => {
   const orderID = req.body.orderID;
   let rating = req.body.rating;
   rating  = parseFloat(rating);
+  console.log (typeof(rating));
 
 
   const seller = await Seller.findByID(sellerID);
