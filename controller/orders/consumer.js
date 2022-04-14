@@ -116,13 +116,13 @@ exports.rateSeller = async (req, res, next) => {
     numerator += rating;
     dinominator++;
    let average =  (numerator / dinominator);
-   average.toPrecision(2)
+  const averageRating = average.toPrecision(2);
     
     const updateRatingsParameters = await Seller.updateRatingsParameters(
       sellerID,
       numerator,
       dinominator,
-      average
+      averageRating
     );
     return res.status(200).json({
       message: "seller rated!",
