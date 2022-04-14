@@ -103,7 +103,9 @@ exports.rateSeller = async (req, res, next) => {
   const sellerID = req.body.sellerID;
   const consumerID = req.body.consumerID;
   const orderID = req.body.orderID;
-  const rating = req.body.rating;
+  let rating = req.body.rating;
+  rating  = parseFloat(rating);
+
 
   const seller = await Seller.findByID(sellerID);
   const consumer = await Consumer.findById(consumerID);
@@ -112,11 +114,12 @@ exports.rateSeller = async (req, res, next) => {
     const rateOrder = await Orders.rateOrder(orderID);
     let numerator = seller.avgRatingNumerator;
     let dinominator = seller.avgRatingDinominator;
-
+    console.log("num - :" + typeof(numerator) + "dino :- " + typeof(dinominator));
     numerator += rating;
     dinominator++;
+    
    let average =  (numerator / dinominator);
-  const averageRating = average.toPrecision(2);
+  const averageRating = Number(average.toPrecision(2)) ;
     
     const updateRatingsParameters = await Seller.updateRatingsParameters(
       sellerID,
