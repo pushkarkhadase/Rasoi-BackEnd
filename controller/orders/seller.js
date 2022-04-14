@@ -3,7 +3,7 @@ const Order = require("../../models/orders");
 const Consumer = require("../../models/consumer");
 
 exports.getSellerOrders = async (req, res, next) => {
-  const sellerID = req.body.sellerID;
+  const sellerID = req.query.sellerID;
 
   const seller = await Seller.findByID(sellerID);
   if (seller) {
