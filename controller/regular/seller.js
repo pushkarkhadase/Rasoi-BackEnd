@@ -455,7 +455,7 @@ exports.editSellerDish = async (req, res, next) => {
     if (newImage == null || newImage == "null") {
       newImage = dish.imageURL;
     } else {
-      fileHelper.deleteFile(imageURL);
+      fileHelper.deleteFile(dish.imageURL);
     }
     if(dish.isSpecial == "true" || dish.isSpecial == true){
       let sdnArray = seller.specialDishesNames;
