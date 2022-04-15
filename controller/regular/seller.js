@@ -527,7 +527,7 @@ exports.deleteSellerDish = async (req, res, next) => {
       });
       sellerDishIdArray.splice(itemIndex, 1);
       const sellerDishDelete = await SellerDishes.deleteDish(dishID);
-      console.lof(sellerDishDelete)
+      
       const sellerUpdate = await Seller.updateDeletedSellerDishRecord(
         sellerID,
         sellerDishIdArray,
