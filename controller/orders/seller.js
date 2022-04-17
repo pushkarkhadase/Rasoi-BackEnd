@@ -9,17 +9,16 @@ exports.getSellerOrders = async (req, res, next) => {
   if (seller) {
     const sellerOrders = [];
     const allOrders = await Order.findIncompleteOrders(seller.orders);
-    
+
     for (let order of allOrders) {
       if (order.orderStatus == "Pending" || order.orderStatus == "Prepairing") {
-        
         sellerOrders.push(order);
       }
     }
     if (sellerOrders.length > 0) {
       res.status(200).json({
         orders: sellerOrders,
-        message:"orders"
+        message: "orders",
       });
     } else {
       res.status(200).json({
@@ -60,13 +59,13 @@ exports.acceptOrRejectOrders = async (req, res, next) => {
       let orderIndex = orderIDList.findIndex((id) => {
         return id.toString() === orderID.toString();
       });
-      console.log("index " + orderIndex);
+
       orderIDList.splice(orderIndex, 1);
-      console.log("Again printing the order list" + orderIDList);
-      const updateSellerOrders = await Seller.deleteOrderID(
-        sellerID,
-        orderIDList
-      );
+
+      // const updateSellerOrders = await Seller.deleteOrderID(
+      //   sellerID,
+      //   orderIDList
+      // );
       const updateOrderStatus = await Order.updateOrderStatus(
         orderID,
         "Rejected"
@@ -97,6 +96,45 @@ exports.markAsDeliver = async (req, res, next) => {
   } else {
     return res.status(304).json({
       message: "Invalid Seller or Order ID",
+    });
+  }
+};
+
+exports.getSellerOrdersAnalytics = async (req, res, next) => {
+  const sellerID = req.query.sellerID;
+
+  const seller = await Seller.findByID(sellerID);
+
+  if (seller) {
+    const allSellerOrders = await Order.findAllOrdersByIds(seller.orders);
+    let acceptedOrders = 0;
+    let rejectedOrders = 0;
+    let pendingOrders = 0;
+  
+    allSellerOrders.forEach(order => {
+      if (order.orderStatus == "Pending") {
+        console.log("pending");
+        pendingOrders++;
+      } else if (
+        order.orderStatus == "Prepairing" ||
+        order.orderStatus == "Delivered"
+      ) {
+        console.log("accepted");
+        acceptedOrders++;
+      } else {
+        console.log("rejected");
+        rejectedOrders++;
+      }
+    });
+      console.log("accepted:- " + acceptedOrders + "rejected:- " + rejectedOrders + "pending:- " + pendingOrders)
+      return res.status(200).json({
+        accepted: acceptedOrders,
+        rejected: rejectedOrders,
+        pending: pendingOrders,
+      });
+  } else {
+    return res.status(403).json({
+      message: "invalid sellerID",
     });
   }
 };

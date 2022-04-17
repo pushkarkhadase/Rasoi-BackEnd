@@ -463,8 +463,6 @@ exports.editSellerDish = async (req, res, next) => {
       sdnArray.splice(dishIndex,1,name);
       const sellerUpdate = await Seller.updateSpecialDishNameArray(sellerID,sdnArray);
     }
-    
-
     const result = await SellerDishes.updateDish(
       dishID,
       name,
