@@ -47,7 +47,7 @@ class Validator {
   //static method for deleting the varified or rejected user id from the sellerIDs of validator
   static deleteSellerID(validatorSellerIDs, sellerID) {
     const tempArr = [];
-    validatorSellerIDs.forEach(sellerid => {
+    validatorSellerIDs.forEach((sellerid) => {
       tempArr.push(sellerid.toString());
     });
     const sellerIndex = tempArr.indexOf(sellerID);
@@ -57,8 +57,20 @@ class Validator {
     return db
       .collection("validator")
       .updateOne(
-        { _id: new mongodb.ObjectId("61ece3aa24f20544afb6c4ea") },
+        { username: "Somesh Lad" },
         { $set: { sellerIds: validatorSellerIDs } }
+      );
+  }
+
+  static addRejectedSellerID(rejectedSellerIDS, sellerID) {
+    const db = getDb();
+    const tempArr = rejectedSellerIDS;
+    tempArr.push(sellerID);
+    return db
+      .collection("validator")
+      .updateOne(
+        { username: "Somesh Lad" },
+        { $set: { rejectedSellers: tempArr } }
       );
   }
 }

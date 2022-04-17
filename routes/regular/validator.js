@@ -13,5 +13,8 @@ router.get('/getAllNonVadidatedSeller', validatorController.getAllNonVadidatedSe
 // PUT /validator/validateSeller
 router.put('/validateSeller', validatorController.validateOrRejectSeller);
 
+//GET /validator/analytics
+router.get("/analytics", validatorController.getValidatorAnalystics);
+
 //exporting the router
 module.exports = router;
