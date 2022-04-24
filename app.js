@@ -111,5 +111,5 @@ app.use("/consumer",consumerOrderRoutes);
 app.use("/seller", sellerOrderRoutes);
 //connnecting the mongodb
 mongoConnect(() => {
-  app.listen(3000);
+  app.listen(8080);
 });
