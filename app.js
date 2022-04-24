@@ -64,6 +64,15 @@ const app = express();
 //using the cors package
 app.use(cors());
 
+//function to set headers for the cors
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+
 //using the bodyParser
 app.use(bodyParser.json()); //application/json
 
